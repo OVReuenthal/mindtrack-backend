@@ -71,6 +71,68 @@ let HabitsService = class HabitsService {
             },
         });
     }
+    async rebootBadHabit(habitId) {
+        const habit = await this.prisma.habits.findUnique({
+            where: { habit_id: habitId },
+        });
+        if (!habit) {
+            throw new common_1.NotFoundException(`Habit con id ${habitId} no existe`);
+        }
+        if (habit.type !== false) {
+            throw new common_1.BadRequestException(`El hábito con id ${habitId} no es un hábito malo`);
+        }
+        const updatedProgress = await this.prisma.progress.updateMany({
+            where: { habit_id: habitId },
+            data: {
+                streak: 0,
+                date: new Date(),
+            },
+        });
+        return {
+            message: `Hábito malo con id ${habitId} reiniciado`,
+            progress: updatedProgress,
+        };
+    }
+    async checkBadHabits() {
+        const today = new Date();
+        const badHabits = await this.prisma.habits.findMany({
+            where: { type: false },
+            include: { progress: true },
+        });
+        const updates = [];
+        for (const habit of badHabits) {
+            if (habit.progress.length > 0) {
+                const progress = habit.progress[0];
+                const lastRefresh = new Date(progress.date);
+                const expectedDate = new Date(lastRefresh);
+                expectedDate.setDate(expectedDate.getDate() + progress.streak);
+                if (today > expectedDate) {
+                    const updated = await this.prisma.progress.update({
+                        where: {
+                            habit_id_date: {
+                                habit_id: progress.habit_id,
+                                date: progress.date,
+                            },
+                        },
+                        data: {
+                            streak: progress.streak + 1,
+                            date: today,
+                        },
+                    });
+                    updates.push({
+                        habit_id: habit.habit_id,
+                        habit_name: habit.habit_name,
+                        new_streak: updated.streak,
+                        refreshed_at: updated.date,
+                    });
+                }
+            }
+        }
+        return {
+            message: 'Chequeo de hábitos malos completado',
+            updated: updates,
+        };
+    }
     findAll() {
         return `This action returns all habits`;
     }

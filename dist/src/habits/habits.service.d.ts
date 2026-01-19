@@ -39,6 +39,19 @@ export declare class HabitsService {
         color: string;
         habit_id: number;
     }[]>;
+    rebootBadHabit(habitId: number): Promise<{
+        message: string;
+        progress: import("@prisma/client").Prisma.BatchPayload;
+    }>;
+    checkBadHabits(): Promise<{
+        message: string;
+        updated: {
+            habit_id: number;
+            habit_name: string;
+            new_streak: number;
+            refreshed_at: Date;
+        }[];
+    }>;
     findAll(): string;
     findOne(id: number): string;
     update(id: number, updateHabitDto: UpdateHabitDto): string;

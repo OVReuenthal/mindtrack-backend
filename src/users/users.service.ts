@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -55,6 +55,51 @@ export class UsersService {
 
     return user;
   }
+
+  async updateBedtime(userId: number, bedtime: string) {
+    const user = await this.prisma.users.update({
+      where: { user_id: userId },
+      data: { bedtime },
+    });
+    if (!user) throw new NotFoundException(`Usuario ${userId} no encontrado`);
+    return user;
+  }
+
+  async updateWakeupTime(userId: number, wakeup_time: string) {
+    const user = await this.prisma.users.update({
+      where: { user_id: userId },
+      data: { wakeup_time },
+    });
+    if (!user) throw new NotFoundException(`Usuario ${userId} no encontrado`);
+    return user;
+  }
+
+  async updateProductiveTime(userId: number, productive_time: string) {
+    const user = await this.prisma.users.update({
+      where: { user_id: userId },
+      data: { productive_time },
+    });
+    if (!user) throw new NotFoundException(`Usuario ${userId} no encontrado`);
+    return user;
+  }
+
+  async createUserSimple(user_name: string, password: string) {
+    const user = await this.prisma.users.create({
+      data: {
+        user_name,
+        password,
+        level: 1,
+        exp_points: 0,
+        bedtime: null,
+        wakeup_time: null,
+        productive_time: null,
+      },
+    });
+
+    return user;
+  }
+
+
 
 
 

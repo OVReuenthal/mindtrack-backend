@@ -27,6 +27,12 @@ export class HabitsController {
     return this.habitsService.findAll();
   }
 
+  @Patch('reboot-bad/:id')
+  async rebootBadHabit(@Param('id') id: string) {
+    return this.habitsService.rebootBadHabit(Number(id));
+  }
+
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.habitsService.findOne(+id);

@@ -16,11 +16,11 @@ export declare class HabitsController {
             streak: number;
         }[];
     } & {
-        user_id: number;
         habit_name: string;
         type: boolean;
         color: string;
         habit_id: number;
+        user_id: number;
     }>;
     getNegativeHabits(): Promise<{
         habit_name: string;
@@ -28,6 +28,8 @@ export declare class HabitsController {
         habit_id: number;
     }[]>;
     getPositiveHabits(): Promise<{
+        habit_name: string;
+        color: string;
         schedule: {
             day_of_week: number;
         }[];
@@ -35,11 +37,13 @@ export declare class HabitsController {
             date: Date;
             streak: number;
         }[];
-        habit_name: string;
-        color: string;
         habit_id: number;
     }[]>;
     findAll(): string;
+    rebootBadHabit(id: string): Promise<{
+        message: string;
+        progress: import("@prisma/client").Prisma.BatchPayload;
+    }>;
     findOne(id: string): string;
     update(id: string, updateHabitDto: UpdateHabitDto): string;
     remove(id: string): string;

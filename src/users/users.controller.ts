@@ -18,6 +18,30 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  @Patch(':id/bedtime')
+  async updateBedtime(@Param('id') id: string, @Body('bedtime') bedtime: string) {
+    return this.usersService.updateBedtime(Number(id), bedtime);
+  }
+
+  @Patch(':id/wakeup')
+  async updateWakeupTime(@Param('id') id: string, @Body('wakeup_time') wakeup_time: string) {
+    return this.usersService.updateWakeupTime(Number(id), wakeup_time);
+  }
+
+  @Patch(':id/productive')
+  async updateProductiveTime(@Param('id') id: string, @Body('productive_time') productive_time: string) {
+    return this.usersService.updateProductiveTime(Number(id), productive_time);
+  }
+
+  @Post('simple')
+  async createUserSimple(
+    @Body('user_name') user_name: string,
+    @Body('password') password: string,
+  ) {
+    return this.usersService.createUserSimple(user_name, password);
+  }
+
+
 
   @Get()
   findAll() {
