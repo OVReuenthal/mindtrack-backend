@@ -16,15 +16,13 @@ export declare class HabitsService {
             streak: number;
         }[];
     } & {
+        user_id: number;
         habit_name: string;
         type: boolean;
         color: string;
         habit_id: number;
-        user_id: number;
     }>;
     getPositiveHabits(): Promise<{
-        habit_name: string;
-        color: string;
         schedule: {
             day_of_week: number;
         }[];
@@ -32,6 +30,8 @@ export declare class HabitsService {
             date: Date;
             streak: number;
         }[];
+        habit_name: string;
+        color: string;
         habit_id: number;
     }[]>;
     getNegativeHabits(): Promise<{
