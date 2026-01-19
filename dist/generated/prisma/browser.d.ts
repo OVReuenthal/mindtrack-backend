@@ -1,0 +1,10 @@
+import * as Prisma from './internal/prismaNamespaceBrowser.js';
+export { Prisma };
+export * as $Enums from './enums.js';
+export * from './enums.js';
+export type habits = Prisma.habitsModel;
+export type level_rewards = Prisma.level_rewardsModel;
+export type progress = Prisma.progressModel;
+export type schedule = Prisma.scheduleModel;
+export type schedule_days = Prisma.schedule_daysModel;
+export type users = Prisma.usersModel;
