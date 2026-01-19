@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  user_id         Int            @id @default(autoincrement())
+  user_name       String         @unique
+  password        String
+  level           Int
+  bedtime         DateTime?
+  wakeup_time     DateTime?
+  productive_time DateTime?
+  exp_points      Int            @default(0)
+
+  habits          habits[]
+  level_rewards   level_rewards  @relation(fields: [level], references: [level])
+}
+
+model level_rewards {
+  level        Int     @id @default(autoincrement())
+  level_reward String?
+  users        users[]
+}
+
+model habits {
+  habit_id    Int        @id @default(autoincrement())
+  habit_name  String
+  user_id     Int
+  type        Boolean
+  color       String
+
+  users       users      @relation(fields: [user_id], references: [user_id])
+  schedule    schedule[]
+  progress    progress[]
+}
+
+model schedule {
+  schedule_id Int     @id @default(autoincrement())
+  habit_id    Int
+  day_of_week Int     // 1 = lunes, 2 = martes, etc.
+
+  habits      habits  @relation(fields: [habit_id], references: [habit_id])
+}
+
+model progress {
+  habit_id Int
+  date     DateTime
+  streak   Int
+
+  habits   habits @relation(fields: [habit_id], references: [habit_id])
+
+  @@id([habit_id, date]) // PK compuesta
+}
